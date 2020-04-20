@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+          <link rel="stylesheet" href="{% static 'run/style.css' %}">
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+     {% block java%}
+     {% endblock %}
+     <title>Document</title>
+</head>
+
+<body>
+     <div class="grid">
+          <div id="logo">
+               <img src="{% static 'run/logo.png' %}"height="55px" width="55px"> 
+          </div>
+          <div id="mainMenu">
+               <ul  id="menuList">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">About</a></li>     
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Partners</a></li>
+                    <li><a href="/#contact">Contact Us</a></li>
+                    {% if not user.is_authenticated %}
+                         <li><a href="login">login/register</a></li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li><a href="dashbord">Dashbord</a></li>
+                    <li><a href="logout">logout</a></li>
+                    {% endif %}
+               </ul>
+          </div>
+     {% block body %}
+     {% endblock %}
+     </div>
+</body>
+
+</html>

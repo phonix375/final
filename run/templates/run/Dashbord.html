@@ -1,0 +1,194 @@
+{% extends "run/base.html" %}
+{% block java %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+     google.charts.load('current', { 'packages': ['corechart'] });
+     google.charts.setOnLoadCallback(drawChart);
+
+     function drawChart() {
+          list1 = []
+          var test1 = {{Runs|safe}}
+          for(key in test1){
+               list1.push([(new Date(test1[key].start_time.slice(0,19))),parseFloat(test1[key].distance) / ((new Date(test1[key].end_time.slice(0,19)) - new Date(test1[key].start_time.slice(0,19))) /1000)*60 *60 /1000 ])
+               
+          };
+          let testdate = new Date(test1[0].end_time.slice(0,19))
+          let testdate1 = new Date(test1[0].start_time.slice(0,19))
+          console.log(list1)
+
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('date', 'Time of Day');
+          data.addColumn('number', 'KM/h');
+          let test11 = '{{Runs.0.start_time|safe}}'
+          console.log(test11.slice(0, 4))
+
+          data.addRows([
+               list1[0], list1[1], list1[2],list1[3],list1[4]
+          ]);
+
+
+          var options = {
+               title: 'Average speed',
+               width: '100%',
+               height: 400,
+               hAxis: {
+                    format: 'M/d/yy',
+                    gridlines: { count: 15 }
+               },
+               vAxis: {
+                    gridlines: { color: 'none' },
+                    minValue: 0
+               }
+          };
+
+
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+          chart.draw(data, options);
+
+          var button = document.getElementById('change');
+
+          button.onclick = function () {
+
+               // If the format option matches, change it to the new option,
+               // if not, reset it to the original format.
+               options.hAxis.format === 'M/d/yy' ?
+                    options.hAxis.format = 'MMM dd, yyyy' :
+                    options.hAxis.format = 'M/d/yy';
+                    
+
+               chart.draw(data, options);
+          };
+     
+          function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses', 'Profit'],
+          ['2014', 1000, 400, 200],
+          ['2015', 1170, 460, 250],
+          ['2016', 660, 1120, 300],
+          ['2017', 1030, 540, 350]
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Company Performance',
+            subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+     
+     }
+</script>
+
+<script>
+     $(window).resize(function(){
+          console.log('this is working')
+          drawChart();
+     });
+     </script>
+
+     <script>
+
+
+          // Our labels along the x-axis
+          let list1 = []
+          let distance = []
+          let test1 = {{Runs|safe}}
+          for(key in test1){
+               list1.push([(test1[key].start_time.slice(0,19))]);
+               distance.push(parseFloat(test1[key].distance));
+         
+          };
+          console.log(distance)
+var years = list1;
+// For drawing the lines
+var africa = distance;
+
+
+window.onload = function() {
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      { 
+        data: africa
+      }
+    ]
+  }
+});
+}
+
+     </script>
+{% endblock %}
+
+{% block body %}
+</div>
+
+<div id="grid4">
+<div id="sidemenu">
+     <ul>
+          <li>Dashbord</li>
+          <li>My Runs</li>
+          <li>My Frends</li>
+          <li>My Chalanges</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+
+     </ul>
+</div>
+<div id="maindash">
+     <div id="maindashGrid">
+          <div class="gap1"></div>
+          <div id="chart1">
+               <div id="chart_div" class="chart"></div>
+               <button id="change">change</button>
+          </div>
+          <div class="gap1"></div>
+          <div id="chart2">
+               <canvas id="myChart" width="" height="250"></canvas>
+          </div>
+          
+     </div>
+</div>
+</div>
+
+<div class="col-10">
+     <h3>Dashbord</h3>
+   <div id="chart_div" class="chart"></div>
+   <button id="change">change</button>
+   Welcome back {{request.user.username}} this is your statistics :
+   {{Runs}}
+
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-4 col-md-offset-4">
+<hr />
+</div>
+<div class="clearfix"></div>
+<div class="col-md-6">
+<div id="chart_div1" class="chart"></div>
+</div>
+<div class="col-md-6">
+   <div id="chart_div" class="chart"></div>
+   <button id="change">change</button>
+</div>
+</div>
+{% endblock %}
